@@ -51,47 +51,34 @@ function ejectNonOres()
     end
 end
 
--- Main mining function
-function mineRoom(width, length, height)
-    for y = 1, height do
-        for x = 1, width do
-            for z = 1, length do
-                mineForward()
-                ejectNonOres()
-            end
-            if x < width then
-                if x % 2 == 0 then
-                    turtle.turnRight()
-                    mineForward()
-                    turtle.turnRight()
-                else
-                    turtle.turnLeft()
-                    mineForward()
-                    turtle.turnLeft()
-                end
-            end
+-- Function to place torch
+function placeTorch()
+    if turtle.getItemCount(16) > 0 then
+        turtle.select(16)
+        turtle.place()
+    end
+end
+
+-- Main tunneling function
+function tunnel()
+    for _ = 1, 3 do
+        for _ = 1, 2 do
+            mineForward()
+            ejectNonOres()
+            placeTorch()
         end
-        if y < height then
-            if y % 2 == 0 then
-                turtle.turnRight()
-                turtle.turnRight()
-                mineUp()
-            else
-                mineDown()
-            end
+        if _ % 2 == 0 then
+            turtle.turnRight()
+            mineForward()
+            turtle.turnRight()
+        else
+            turtle.turnLeft()
+            mineForward()
+            turtle.turnLeft()
         end
     end
     returnToStart()
 end
 
--- Get dimensions from user
-print("Enter room dimensions:")
-print("Width:")
-local width = tonumber(read())
-print("Length:")
-local length = tonumber(read())
-print("Height:")
-local height = tonumber(read())
-
--- Call the main mining function with user-provided dimensions
-mineRoom(width, length, height)
+-- Call the main tunneling function
+tunnel()
